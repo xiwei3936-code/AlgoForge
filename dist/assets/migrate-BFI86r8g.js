@@ -1,0 +1,1 @@
+import{T as e,a as t,r as n,y as r}from"./backup-CkYvSfQr.js";async function i(){let i;try{let a=await e(r);i={ok:!0,backup:n(t(),a)}}catch(e){i={ok:!1,error:String(e&&e.message||e)}}await fetch(`/api/migrate/upload`,{method:`POST`,headers:{"Content-Type":`application/json; charset=utf-8`},body:JSON.stringify(i)}),document.title=`AlgoForge 数据迁移：已交出`}i().catch(()=>{});

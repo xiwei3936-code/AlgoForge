@@ -1,0 +1,5 @@
+# 所有文件一律原样保存，不做任何换行转换。
+# 包里的 .cmd / .vbs 必须是 CRLF，含中文的 .ps1 必须带 BOM —— 换成 LF 之后双击会直接出错。
+# 不加这一行的话，开着 core.autocrlf 的 git 会在提交时把它们改成 LF，
+# GitHub 上「Download ZIP」下下来的就是坏的。
+* -text

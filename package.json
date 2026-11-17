@@ -1,0 +1,37 @@
+{
+  "name": "algoforge",
+  "private": true,
+  "version": "3.0.0",
+  "license": "MIT",
+  "description": "本地运行、完全离线的算法练习工具：100 道 Hot100 题，Python 与 Java 双语自动判题，带过程演示与间隔重复复习。",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "oxlint",
+    "preview": "vite preview",
+    "app": "electron electron/main.mjs",
+    "test": "node scripts/lint-design.mjs && node scripts/lint-repo.mjs && node scripts/check-contrast.mjs && node scripts/test-theme.mjs && node scripts/test-codestore.mjs && node scripts/test-runstate.mjs && node scripts/test-backup.mjs && node scripts/test-layout.mjs && node scripts/test-noteimages.mjs && node scripts/test-noteformat.mjs && node scripts/test-review.mjs && node scripts/test-categories.mjs && node scripts/test-bootsplash.mjs && node scripts/make-boot-html.mjs --check && node scripts/gen-docs.mjs --check && node scripts/test-portprobe.mjs && node scripts/test-shortcut-cleanup.mjs && node scripts/test-anim.mjs && node scripts/test-snapshot.mjs && node scripts/test-snapshot-client.mjs && node scripts/test-migration.mjs && node scripts/test-old-version.mjs && node scripts/test-installer-config.mjs && node scripts/test-dataguard.mjs && node scripts/test-probe.mjs && node scripts/test-ui-render.mjs && node scripts/verify-seed.mjs && node scripts/test-javaexplain.mjs && node scripts/verify-java-extra.mjs --from-meta && node scripts/test-diagnostics.mjs && node scripts/test-notices.mjs && node scripts/test-package.mjs && node scripts/test-update-pkg.mjs && node scripts/test-missing-pkg.mjs && node scripts/test-judgespec.mjs && node scripts/test-exampleformat.mjs && node scripts/test-javajudge.mjs && node scripts/test-leetcode-parity.mjs && node scripts/test-py-recursion.mjs && node scripts/test-java-signature.mjs && node scripts/test-hidden-cases.mjs && node scripts/test-random-cases.mjs && node scripts/test-perf.mjs && node scripts/test-http-judge.mjs && node scripts/test-java-concurrency.mjs && node scripts/test-snapshot-http.mjs && node scripts/gen-bagu-index.mjs --check && node scripts/test-bagu.mjs && node scripts/test-bagu-code.mjs && node scripts/bagu-anim/verify-hashmap.mjs && node scripts/bagu-anim/threadpool.mjs && node scripts/bagu-anim/chm.mjs && node scripts/bagu-anim/cas.mjs && node scripts/bagu-anim/aqs.mjs && node scripts/bagu-anim/classloader.mjs && node scripts/bagu-anim/lockupgrade.mjs && node scripts/bagu-anim/gen.mjs --check",
+    "notices": "node scripts/gen-notices.mjs",
+    "package": "node scripts/package.mjs",
+"installer": "node scripts/build-installer.mjs",
+    "verify:java": "node scripts/verify-java.mjs --json",
+    "verify:java:alt": "node scripts/verify-java.mjs --alt --json",
+    "verify:java:extra": "node scripts/verify-java-extra.mjs --from-meta",
+    "docs": "node scripts/gen-docs.mjs"
+  },
+  "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.4",
+    "electron": "44.9.0",
+    "electron-builder": "26.15.3",
+    "oxlint": "^1.75.0",
+    "vite": "^8.2.0"
+  }
+}

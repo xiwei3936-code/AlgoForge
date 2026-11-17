@@ -1,0 +1,2 @@
+JAVA_VERSION="21.0.12.1"
+MODULES="java.base java.compiler java.logging jdk.charsets jdk.internal.opt jdk.zipfs jdk.compiler jdk.random jdk.unsupported"

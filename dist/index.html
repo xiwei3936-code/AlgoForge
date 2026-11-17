@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- 用多尺寸 .ico 而不是单张图：程序是用 Chrome 的 --app 模式开窗的
+         （launch/open-app.ps1，注释里就写着"让它有自己的窗口与任务栏图标"），
+         那个窗口的**任务栏图标就是从这里来的**。多尺寸能让 16(标签页) /
+         32(任务栏) / 256(Alt+Tab 大图) 各取各的那一帧，不用一张图硬缩。
+         图由根目录的 make-symbol.mjs 从 symbol.png 生成。 -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 这行就是应用模式窗口的标题栏文字。 -->
+    <title>AlgoForge</title>
+
+    <!-- ★ 主题必须在**第一次绘制之前**定下来 ★
+         放在 <head> 里、且是同步 inline —— 换成模块或 defer 都来不及：
+         浅色用户会先看到一整屏深色再"啪"地翻白，那一闪修不掉，只能不让它发生。
+
+         ⚠ 这段解析逻辑和 src/theme.js 的 resolveTheme 是**同一套判据的两份**。
+            inline 这份不能 import 任何东西，所以只能重写一遍。
+            scripts/test-theme.mjs 会把两份比对，改一边忘了另一边会直接红。
+         ⚠ 拿不准时落到 dark：这个程序从 2026-08-27 起就是深色的，
+            保持现状比翻成浅色更不吓人。 -->
+    <script>
+      (function () {
+        try {
+          var p = localStorage.getItem('hot100:theme');
+          var t = (p === 'light' || p === 'dark')
+            ? p
+            : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches
+              ? 'light' : 'dark');
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {
+          /* 隐私模式下 localStorage 会抛。抛了就走深色，绝不能让整页起不来。 */
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="/assets/main-Xble7MU8.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/backup-CkYvSfQr.js">
+    <link rel="stylesheet" crossorigin href="/assets/main-Drb7BWjV.css">
+  </head>
+  <body>
+    <!-- ★ 启动动画「拉开定格」★ ————————————————————————————————
+         < 向左、> 向右拉开并停住一拍，同时 / 转满 360°，然后整体让位、界面浮现。
+
+         ── 为什么 logo 是拆成四层的 ──
+         Logo.png 是一张压平的位图，整块动不了。scripts/make-boot-parts.mjs 按亮度
+         把三个笔画切成独立连通域（阈值来自实测直方图：砖体 24~47 / 辉光 48~199 /
+         笔画亮核 >=200），产出 public/boot/{left,slash,right}.png；砖体改用 CSS 画
+         （颜色取样自原图：顶 #242426 → 中 #1e1e20 → 底 #1a1b1e，圆角 22.4%）。
+         原图烙在砖上的辉光和投影**刻意没有保留** —— 改成 CSS 的 drop-shadow 挂在
+         各自图层上，这样光会跟着笔画一起移动和旋转，而不是钉在原地穿帮。
+
+         ── 为什么这次是外链而不是内联 ──
+         上一版（0.5 秒那个）必须把图内联成 data URI，因为可见窗口只有几十毫秒，
+         外部请求赶不上。现在最短展示 2 秒，三个几 KB 的本地请求毫无压力；
+         而且笔画是从 opacity:0 淡入的（前 14% ≈ 280ms），图早就到了。
+         少了内联也就少了"同一张图两份拷贝会分叉"那个隐患。
+
+         ── 位置的硬约束 ──
+         它必须在 #root **外面**：要盖满 BOOT_MIN_MS 再让位，而放进 #root 会被
+         React 首次提交直接清掉。代价是**必须有人拆它**（src/bootSplash.js），
+         没人拆就永远盖住界面 —— lint-design.mjs 把这条链钉着。
+         ———————————————————————————————————————————————————— -->
+    <div id="boot" class="boot">
+      <div class="boot-spill"></div>
+      <div class="boot-logo">
+        <div class="boot-brick"></div>
+        <i class="boot-g boot-l"></i>
+        <i class="boot-g boot-s"></i>
+        <i class="boot-g boot-r"></i>
+      </div>
+      <div class="boot-name">AlgoForge</div>
+      <div class="boot-slogan">Forge the Logic. Sharpen the Mind.</div>
+      <div class="boot-vig"></div>
+      <!-- 十秒之后还停在这里，说明 React 根本没挂上（界面里的 JS 崩了）。
+           不写这一句的话，使用者看到的就是一块不动的黑屏，什么线索都没有 ——
+           而"不报错只默默错"正是这个项目一直在消灭的东西。纯 CSS 延时，不用 JS 定时器。 -->
+      <p class="boot-stuck">界面没能加载出来。关掉窗口重新打开试试；还是这样的话，把这句话告诉给你这个工具的人。</p>
+    </div>
+    <!-- ⚠ 这一行必须紧跟在占位后面。head 里的样式表会挡住脚本执行，所以这段跑到时
+         CSS 一定已经就绪 —— 也就是动画**真正开始被画出来**的那一刻。
+         最短展示时间从这里算，而不是从导航开始算：后者会把 HTML/CSS 的加载也算进去，
+         机器一慢就等于偷偷缩短了实际能看见的时间。 -->
+    <script>
+      window.__bootAt = performance.now();
+      /* 从启动动画页（launch/boot.html）跳进来的，带着 ?boot=1：
+         那边已经把整套动画演完了，这里整块不显示，否则同一段动画连演两遍。
+         ⚠ 必须在**渲染之前**决定。等 React 挂载再拆的话，中间会闪出
+            半截动画（那时它已经跑到"拉开"中段了）。 */
+      if (location.search.indexOf('boot=1') >= 0) {
+        document.documentElement.classList.add('boot-skip');
+      }
+    </script>
+
+    <div id="root"></div>
+  </body>
+</html>
